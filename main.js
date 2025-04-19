@@ -1,4 +1,4 @@
-let nodeMaterial;
+let nodeMaterial1, nodeMaterial2;
 
 window.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("renderCanvas");
@@ -13,44 +13,50 @@ window.addEventListener("DOMContentLoaded", () => {
   scene.createDefaultSkybox(hdrTexture, true, 1000);
 
   BABYLON.SceneLoader.Append("./models/", "sedia01.glb", scene, async function () {
-    nodeMaterial = await BABYLON.NodeMaterial.ParseFromFileAsync("tessutoAdvanced", "./shaders/tessutoAdvanced.json", scene);
-    nodeMaterial.build(true);
+    const mesh = scene.meshes.find(m => m.name !== "__root__");
 
-    scene.meshes.forEach((mesh) => {
-      if (mesh.material) {
-        mesh.material.dispose();
-        mesh.material = nodeMaterial;
-      }
-    });
+    // Load 2 custom materials from the same nodeMaterial
+    nodeMaterial1 = await BABYLON.NodeMaterial.ParseFromFileAsync("tessutoAdvanced", "./shaders/tessutoAdvanced.json", scene);
+    await nodeMaterial1.buildAsync();
+    nodeMaterial2 = nodeMaterial1.clone("tessutoAdvanced2");
 
-    // Focus camera
-    const mesh = scene.getMeshByName("sedia01") || scene.meshes.find(m => m.name !== "__root__");
-    if (mesh) {
-      camera.target = mesh.getBoundingInfo().boundingSphere.center;
-      camera.radius = mesh.getBoundingInfo().boundingSphere.radius * 2.5;
-    }
+    // Create metallic PBR material for slot 2
+    const metalMat = new BABYLON.PBRMaterial("MetalMat", scene);
+    metalMat.metallic = 1.0;
+    metalMat.roughness = 0.05;
+    metalMat.reflectivityColor = new BABYLON.Color3(1.0, 1.0, 1.0);
+    metalMat.albedoColor = new BABYLON.Color3(0.8, 0.8, 0.85);
+
+    // Assign materials
+    mesh.material.subMaterials = [nodeMaterial1, nodeMaterial2, metalMat];
+
+    // Auto focus camera
+    camera.target = mesh.getBoundingInfo().boundingSphere.center;
+    camera.radius = mesh.getBoundingInfo().boundingSphere.radius * 2.5;
 
     document.getElementById("fabricSelector").addEventListener("change", (e) => {
       const selected = e.target.value;
-      loadFabricTextures(selected);
+      applyTexturesToMaterial(nodeMaterial1, selected);
+      applyTexturesToMaterial(nodeMaterial2, selected);
     });
 
-    loadFabricTextures("fabric01");
+    applyTexturesToMaterial(nodeMaterial1, "fabric01");
+    applyTexturesToMaterial(nodeMaterial2, "fabric01");
   });
 
-  const loadFabricTextures = (name) => {
+  function applyTexturesToMaterial(material, name) {
     const base = new BABYLON.Texture(`./textures/${name}_baseColor.jpg`, scene);
     const normal = new BABYLON.Texture(`./textures/${name}_normal.jpg`, scene);
     const rough = new BABYLON.Texture(`./textures/${name}_roughness.jpg`, scene);
 
-    const baseNode = nodeMaterial.getBlockByName("BaseColorTexture");
-    const normalNode = nodeMaterial.getBlockByName("NormalMap");
-    const roughNode = nodeMaterial.getBlockByName("RoughnessMap");
+    const baseNode = material.getBlockByName("BaseColorTexture");
+    const normalNode = material.getBlockByName("NormalMap");
+    const roughNode = material.getBlockByName("RoughnessMap");
 
     if (baseNode) baseNode.texture = base;
     if (normalNode) normalNode.texture = normal;
     if (roughNode) roughNode.texture = rough;
-  };
+  }
 
   engine.runRenderLoop(() => {
     scene.render();
