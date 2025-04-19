@@ -15,21 +15,17 @@ window.addEventListener("DOMContentLoaded", async () => {
   BABYLON.SceneLoader.Append("./models/", "sedia01.glb", scene, async () => {
     const mesh = scene.meshes.find(m => m.name !== "__root__");
 
-    // Carica lo shader funzionante
     nodeMaterial = await BABYLON.NodeMaterial.ParseFromFileAsync("TessutoShader", "./shaders/tessutoAdvanced.json", scene);
     await nodeMaterial.buildAsync();
 
-    // Clona il materiale per 2 submesh
     const nodeMat1 = nodeMaterial;
     const nodeMat2 = nodeMaterial.clone("TessutoShader2");
 
-    // Materiale cromato per il terzo slot
     const chromeMat = new BABYLON.PBRMaterial("Chrome", scene);
     chromeMat.metallic = 1.0;
     chromeMat.roughness = 0.05;
     chromeMat.albedoColor = new BABYLON.Color3(0.85, 0.85, 0.9);
 
-    // Materiale di default per il quarto slot
     const basicMat = new BABYLON.StandardMaterial("Base", scene);
 
     const multiMat = new BABYLON.MultiMaterial("multi", scene);
@@ -39,19 +35,18 @@ window.addEventListener("DOMContentLoaded", async () => {
     camera.target = mesh.getBoundingInfo().boundingSphere.center;
     camera.radius = mesh.getBoundingInfo().boundingSphere.radius * 2.5;
 
-    // Gestione UI
     const select = document.getElementById("fabricSelector");
     select.addEventListener("change", (e) => {
       const fabric = e.target.value;
-      applyFabricTextures(nodeMat1, fabric);
-      applyFabricTextures(nodeMat2, fabric);
+      applyFabricTextures(nodeMat1, fabric, scene);
+      applyFabricTextures(nodeMat2, fabric, scene);
     });
 
-    applyFabricTextures(nodeMat1, "fabric01");
-    applyFabricTextures(nodeMat2, "fabric01");
+    applyFabricTextures(nodeMat1, "fabric01", scene);
+    applyFabricTextures(nodeMat2, "fabric01", scene);
   });
 
-  function applyFabricTextures(mat, name) {
+  function applyFabricTextures(mat, name, scene) {
     const base = new BABYLON.Texture(`./textures/${name}_baseColor.jpg`, scene);
     const norm = new BABYLON.Texture(`./textures/${name}_normal.jpg`, scene);
     const rough = new BABYLON.Texture(`./textures/${name}_roughness.jpg`, scene);
@@ -60,9 +55,9 @@ window.addEventListener("DOMContentLoaded", async () => {
     const normalNode = mat.getBlockByName("NormalMap");
     const roughNode = mat.getBlockByName("RoughnessMap");
 
-    if (baseNode) baseNode.texture = base;
-    if (normalNode) normalNode.texture = norm;
-    if (roughNode) roughNode.texture = rough;
+    if (baseNode) { baseNode.texture = base; }
+    if (normalNode) { normalNode.texture = norm; }
+    if (roughNode) { roughNode.texture = rough; }
   }
 
   engine.runRenderLoop(() => scene.render());
