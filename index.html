@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Babylon Configuratore</title>
+  <title>Babylon Configuratore - Fixed</title>
   <style>
     html, body { margin: 0; height: 100%; overflow: hidden; }
     canvas { width: 100%; height: 100%; display: block; }
@@ -10,9 +10,13 @@
 </head>
 <body>
   <canvas id="renderCanvas"></canvas>
-  <script src="https://cdn.babylonjs.com/babylon.js"></script>
-  <script src="https://cdn.babylonjs.com/loaders/babylon.glTF2FileLoader.min.js"></script>
-  <script src="https://cdn.babylonjs.com/nodeEditor/babylon.nodeMaterial.js"></script>
-  <script type="module" src="main.js"></script>
+
+  <!-- Babylon.js compatibile con tutti i browser (no module) -->
+  <script src="https://cdn.babylonjs.com/babylon.max.js"></script>
+  <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+  <script src="https://preview.babylonjs.com/nodeEditor/babylon.nodeEditor.js"></script>
+
+  <!-- Script principale -->
+  <script src="main.js"></script>
 </body>
 </html>

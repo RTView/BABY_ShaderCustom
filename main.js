@@ -1,5 +1,3 @@
-import * as BABYLON from "https://cdn.babylonjs.com/babylon.js";
-
 window.addEventListener("DOMContentLoaded", async () => {
   const canvas = document.getElementById("renderCanvas");
   const engine = new BABYLON.Engine(canvas, true);
