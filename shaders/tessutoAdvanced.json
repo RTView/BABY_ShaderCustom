@@ -1,1 +1,20 @@
-{ "customShader": "example" }
+{
+  "customType": "BABYLON.NodeMaterial",
+  "editorData": {
+    "customType": "BABYLON.NodeMaterial",
+    "editorVersion": "4.2.0",
+    "nodes": [],
+    "attachedBlocks": [],
+    "livePreview": true,
+    "mode": 2
+  },
+  "nodes": [],
+  "outputNodes": [
+    {
+      "name": "PBRMaterial",
+      "type": "PBRMetallicRoughnessBlock",
+      "target": 1,
+      "id": "PBRMaterial"
+    }
+  ]
+}
