@@ -1,4 +1,4 @@
-window.addEventListener("DOMContentLoaded", async () => {
+window.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("renderCanvas");
   const engine = new BABYLON.Engine(canvas, true);
   const scene = new BABYLON.Scene(engine);
@@ -6,7 +6,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   const camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2.5, 3, BABYLON.Vector3.Zero(), scene);
   camera.attachControl(canvas, true);
 
-  const hdrTexture = await BABYLON.CubeTexture.CreateFromPrefilteredDataAsync("./env/environment.env", scene);
+  // VERSIONE SINCRONA COMPATIBILE
+  const hdrTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("./env/environment.env", scene);
   scene.environmentTexture = hdrTexture;
   scene.createDefaultSkybox(hdrTexture, true, 1000);
 
