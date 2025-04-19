@@ -1,3 +1,5 @@
+let nodeMaterial;
+
 window.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("renderCanvas");
   const engine = new BABYLON.Engine(canvas, true);
@@ -11,7 +13,7 @@ window.addEventListener("DOMContentLoaded", () => {
   scene.createDefaultSkybox(hdrTexture, true, 1000);
 
   BABYLON.SceneLoader.Append("./models/", "sedia01.glb", scene, async function () {
-    const nodeMaterial = await BABYLON.NodeMaterial.ParseFromFileAsync("tessutoAdvanced", "./shaders/tessutoAdvanced.json", scene);
+    nodeMaterial = await BABYLON.NodeMaterial.ParseFromFileAsync("tessutoAdvanced", "./shaders/tessutoAdvanced.json", scene);
     nodeMaterial.build(true);
 
     scene.meshes.forEach((mesh) => {
@@ -21,15 +23,34 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Auto-zoom della telecamera sull'oggetto
-    scene.createDefaultCameraOrLight(true, true, true);
-    if (scene.activeCamera) {
-      scene.activeCamera.alpha = Math.PI / 2;
-      scene.activeCamera.beta = Math.PI / 2.5;
-      scene.activeCamera.radius = scene.getMeshByName("sedia01")?.getBoundingInfo().boundingSphere.radius * 2 || 3;
-      scene.activeCamera.target = scene.getMeshByName("sedia01")?.getBoundingInfo().boundingSphere.center || BABYLON.Vector3.Zero();
+    // Focus camera
+    const mesh = scene.getMeshByName("sedia01") || scene.meshes.find(m => m.name !== "__root__");
+    if (mesh) {
+      camera.target = mesh.getBoundingInfo().boundingSphere.center;
+      camera.radius = mesh.getBoundingInfo().boundingSphere.radius * 2.5;
     }
+
+    document.getElementById("fabricSelector").addEventListener("change", (e) => {
+      const selected = e.target.value;
+      loadFabricTextures(selected);
+    });
+
+    loadFabricTextures("fabric01");
   });
+
+  const loadFabricTextures = (name) => {
+    const base = new BABYLON.Texture(`./textures/${name}_baseColor.jpg`, scene);
+    const normal = new BABYLON.Texture(`./textures/${name}_normal.jpg`, scene);
+    const rough = new BABYLON.Texture(`./textures/${name}_roughness.jpg`, scene);
+
+    const baseNode = nodeMaterial.getBlockByName("BaseColorTexture");
+    const normalNode = nodeMaterial.getBlockByName("NormalMap");
+    const roughNode = nodeMaterial.getBlockByName("RoughnessMap");
+
+    if (baseNode) baseNode.texture = base;
+    if (normalNode) normalNode.texture = normal;
+    if (roughNode) roughNode.texture = rough;
+  };
 
   engine.runRenderLoop(() => {
     scene.render();
