@@ -1,8 +1,16 @@
 {
   "customType": "BABYLON.NodeMaterial",
+  "editorData": {},
   "outputNodes": [
-    { "name": "BaseColorTexture", "type": "TextureBlock" },
-    { "name": "NormalMap", "type": "TextureBlock" },
-    { "name": "RoughnessMap", "type": "TextureBlock" }
+    {
+      "name": "OutputBlock",
+      "type": "FragmentOutputBlock",
+      "inputs": {
+        "color": {
+          "type": "Color3",
+          "value": [1, 1, 1]
+        }
+      }
+    }
   ]
 }

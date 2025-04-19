@@ -2,22 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Babylon Multimaterial Configurator</title>
+  <title>Babylon Shader Custom</title>
   <style>
     html, body { margin: 0; height: 100%; overflow: hidden; }
     canvas { width: 100%; height: 100%; display: block; }
-    #ui { position: absolute; top: 10px; left: 10px; z-index: 1000; background: white; padding: 10px; }
+    #ui { position: absolute; top: 10px; left: 10px; background: white; z-index: 1000; padding: 10px; }
   </style>
 </head>
 <body>
   <div id="ui">
-    <label for="fabricSelector">Scegli tessuto:</label>
+    <label for="fabricSelector">Tessuto:</label>
     <select id="fabricSelector">
       <option value="fabric01">Tessuto 01</option>
       <option value="fabric02">Tessuto 02</option>
     </select>
   </div>
-
   <canvas id="renderCanvas"></canvas>
 
   <script src="https://cdn.babylonjs.com/babylon.max.js"></script>

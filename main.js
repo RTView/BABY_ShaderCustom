@@ -26,10 +26,10 @@ window.addEventListener("DOMContentLoaded", async () => {
     chromeMat.roughness = 0.05;
     chromeMat.albedoColor = new BABYLON.Color3(0.85, 0.85, 0.9);
 
-    const basicMat = new BABYLON.StandardMaterial("Base", scene);
+    const baseMat = new BABYLON.StandardMaterial("Base", scene);
 
     const multiMat = new BABYLON.MultiMaterial("multi", scene);
-    multiMat.subMaterials.push(nodeMat1, nodeMat2, chromeMat, basicMat);
+    multiMat.subMaterials.push(nodeMat1, nodeMat2, chromeMat, baseMat);
     mesh.material = multiMat;
 
     camera.target = mesh.getBoundingInfo().boundingSphere.center;
@@ -55,9 +55,9 @@ window.addEventListener("DOMContentLoaded", async () => {
     const normalNode = mat.getBlockByName("NormalMap");
     const roughNode = mat.getBlockByName("RoughnessMap");
 
-    if (baseNode) { baseNode.texture = base; }
-    if (normalNode) { normalNode.texture = norm; }
-    if (roughNode) { roughNode.texture = rough; }
+    if (baseNode) baseNode.texture = base;
+    if (normalNode) normalNode.texture = norm;
+    if (roughNode) roughNode.texture = rough;
   }
 
   engine.runRenderLoop(() => scene.render());
