@@ -1,15 +1,74 @@
 {
   "customType": "BABYLON.NodeMaterial",
   "editorData": {},
+  "options": {},
   "outputNodes": [
     {
-      "name": "OutputBlock",
-      "type": "FragmentOutputBlock",
+      "customType": "BABYLON.PBRMetallicRoughnessBlock",
+      "name": "PBR",
+      "target": 1,
       "inputs": {
-        "color": {
-          "type": "Color3",
-          "value": [1, 1, 1]
+        "baseColor": {
+          "type": "Texture",
+          "connection": {
+            "name": "BaseColorTexture"
+          }
+        },
+        "normal": {
+          "type": "Texture",
+          "connection": {
+            "name": "NormalMap"
+          }
+        },
+        "roughness": {
+          "type": "Texture",
+          "connection": {
+            "name": "RoughnessMap"
+          }
+        },
+        "metallic": {
+          "type": "Float",
+          "value": 0.0
         }
+      },
+      "outputs": {
+        "output": {
+          "type": "Color3"
+        }
+      }
+    },
+    {
+      "customType": "BABYLON.FragmentOutputBlock",
+      "name": "FragmentOutput",
+      "inputs": {
+        "rgba": {
+          "type": "Color3",
+          "connection": {
+            "name": "PBR",
+            "property": "output"
+          }
+        }
+      }
+    },
+    {
+      "customType": "BABYLON.TextureBlock",
+      "name": "BaseColorTexture",
+      "texture": {
+        "url": "fabric01_baseColor.jpg"
+      }
+    },
+    {
+      "customType": "BABYLON.TextureBlock",
+      "name": "NormalMap",
+      "texture": {
+        "url": "fabric01_normal.jpg"
+      }
+    },
+    {
+      "customType": "BABYLON.TextureBlock",
+      "name": "RoughnessMap",
+      "texture": {
+        "url": "fabric01_roughness.jpg"
       }
     }
   ]
